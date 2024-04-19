@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using YoutubeBlogMVC.Data.Context;
 using YoutubeBlogMVC.Data.Extensions;
+using YoutubeBlogMVC.Service.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.LoadDataLayerExtension(builder.Configuration);
+//builder.Services.LoadServiceLayerExtension(builder.Configuration);
+builder.Services.LoadServiceLayerExtension();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
