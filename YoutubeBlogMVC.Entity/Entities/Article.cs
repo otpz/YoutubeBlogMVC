@@ -1,9 +1,9 @@
-﻿using BlogMVC.Core.Entities;
+﻿using YoutubeBlogMVC.Core.Entities;
 using BlogMVC.Entity.Entities;
 
 namespace BlogMVC.Entity.Entities
 {
-    public class Article : EntityBase, IEntityBase
+    public class Article : EntityBase
     {
         public string Title { get; set; }
         public string Content { get; set; }

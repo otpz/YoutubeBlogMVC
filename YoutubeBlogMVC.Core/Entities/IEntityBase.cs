@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlogMVC.Core.Entities
+namespace YoutubeBlogMVC.Core.Entities
 {
     public interface IEntityBase
     {

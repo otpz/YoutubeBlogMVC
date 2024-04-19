@@ -1,4 +1,4 @@
-﻿using BlogMVC.Core.Entities;
+﻿using YoutubeBlogMVC.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlogMVC.Entity.Entities
 {
-    public class Category : EntityBase, IEntityBase
+    public class Category : EntityBase
     {
         public string Name { get; set; }
 
