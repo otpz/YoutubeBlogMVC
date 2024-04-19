@@ -1,7 +1,6 @@
 ﻿using YoutubeBlogMVC.Core.Entities;
-using BlogMVC.Entity.Entities;
 
-namespace BlogMVC.Entity.Entities
+namespace YoutubeBlogMVC.Entity.Entities
 {
     public class Article : EntityBase
     {
