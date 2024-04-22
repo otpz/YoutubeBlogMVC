@@ -61,6 +61,7 @@ namespace YoutubeBlogMVC.Data.Mappings
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
+                ImageId = Guid.Parse("FE3D8ACE-339D-40BD-B620-63FC51CE5F59"),
             };
             superAdmin.PasswordHash = CreatePassHash(superAdmin, "123123asd");
 
@@ -77,6 +78,7 @@ namespace YoutubeBlogMVC.Data.Mappings
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
+                ImageId = Guid.Parse("12E5602D-BD51-4C8F-B0B0-D78024053735"),
             };
             admin.PasswordHash = CreatePassHash(admin, "123123asd");
 
@@ -93,6 +95,7 @@ namespace YoutubeBlogMVC.Data.Mappings
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
+                ImageId = Guid.Parse("12E5602D-BD51-4C8F-B0B0-D78024053735"),
             };
             user.PasswordHash = CreatePassHash(user, "123123asd");
 

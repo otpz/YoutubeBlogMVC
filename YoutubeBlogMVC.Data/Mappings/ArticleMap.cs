@@ -24,6 +24,8 @@ namespace YoutubeBlogMVC.Data.Mappings
                 ImageId = Guid.Parse("FE3D8ACE-339D-40BD-B620-63FC51CE5F59"),
                 CreatedBy = "Admin test",
                 CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                UserId = Guid.Parse("AB5CEB8F-9DC0-424A-A1C9-495BCA357321"),
             },
             new Article
             {
@@ -35,6 +37,8 @@ namespace YoutubeBlogMVC.Data.Mappings
                 ImageId = Guid.Parse("12E5602D-BD51-4C8F-B0B0-D78024053735"),
                 CreatedBy = "Admin test",
                 CreatedDate = DateTime.Now,
+                IsDeleted = false,
+                UserId = Guid.Parse("3D75895A-13AF-4E93-8091-6CD22C173F83"),
             }
             );
 

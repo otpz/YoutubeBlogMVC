@@ -12,8 +12,8 @@ using YoutubeBlogMVC.Data.Context;
 namespace YoutubeBlogMVC.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240422095152_UserCreated")]
-    partial class UserCreated
+    [Migration("20240422110544_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,21 +56,21 @@ namespace YoutubeBlogMVC.Data.Migrations
                         new
                         {
                             Id = new Guid("b38a0c76-1f24-45ef-912f-33b2e6671236"),
-                            ConcurrencyStamp = "718a869f-8fa0-444d-9a95-7b52e084f7a5",
+                            ConcurrencyStamp = "946c66f9-076e-4744-b321-42503f4ace4a",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
                             Id = new Guid("b719a268-4272-452c-987a-95b7a1d1f127"),
-                            ConcurrencyStamp = "98d6bd4c-e007-427d-ab69-216fd5c8a7b1",
+                            ConcurrencyStamp = "6a381403-42c2-4a2a-bef8-b48a55bff4e2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = new Guid("62a7b0a8-62b4-4a0c-9a19-46c7a27929f6"),
-                            ConcurrencyStamp = "805a03f2-15a6-46ad-8829-eee99cb9039d",
+                            ConcurrencyStamp = "9e697f0b-3e54-4451-830f-433db632f7cb",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -124,6 +124,9 @@ namespace YoutubeBlogMVC.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -163,6 +166,8 @@ namespace YoutubeBlogMVC.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -178,18 +183,19 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("ab5ceb8f-9dc0-424a-a1c9-495bca357321"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d78e0417-fdb1-494e-991b-bb7c78bc39a2",
+                            ConcurrencyStamp = "f1c39c6f-2703-4118-98c0-d80d7fc11cfc",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Osman",
+                            ImageId = new Guid("fe3d8ace-339d-40bd-b620-63fc51ce5f59"),
                             LastName = "Topuz",
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
                             NormalizedUserName = "SUPERADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHNdflbUSaGbLtcTYph/IPnysYrosi6A6mZHzs3hzMAdVRn46fzIKQmIRnkK0bdmKA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHzS2t3IMJry24eVU1sx3bv7EOOv9uukew7FcJWwPrUM/xZTeX1YnSBkBizyTpxaEg==",
                             PhoneNumber = "+905349999999",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "7671baed-7177-4971-9af8-08258934a76e",
+                            SecurityStamp = "815e3760-c4d6-4389-b7f0-87b35c3ee5a7",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@gmail.com"
                         },
@@ -197,18 +203,19 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("3d75895a-13af-4e93-8091-6cd22c173f83"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bfda98e6-785d-4102-8bc9-000427d6138a",
+                            ConcurrencyStamp = "7c6c1b50-7f42-4c22-bd95-10c345891105",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Mehmet",
+                            ImageId = new Guid("12e5602d-bd51-4c8f-b0b0-d78024053735"),
                             LastName = "Aslan",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO+R2vqgk/x+KB3UPZB95RbQvwCtO1b73E5Y6v0eLgV8UqY/M/QZ2vNevKT6qF6MdQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDhJnX0yTLOzVzf/13dwjAvsTfpVmpNSpCpmIJ1Q9Ayc+5OZFuIhACV0FA5CfG+6Ag==",
                             PhoneNumber = "+905419999999",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "140eab8e-7e94-4620-8cea-747f9efc3646",
+                            SecurityStamp = "a2471c88-471a-40eb-abb3-8b83ea4c520d",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         },
@@ -216,18 +223,19 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("1da06e8d-3507-4fbc-b49f-3408ac12deb2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "19bb97b2-742f-4755-bd2a-a295afe6cf48",
+                            ConcurrencyStamp = "cc99e16b-064b-4b18-a107-c7dbf5eeed53",
                             Email = "user@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Kerim",
+                            ImageId = new Guid("12e5602d-bd51-4c8f-b0b0-d78024053735"),
                             LastName = "Demir",
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@GMAIL.COM",
                             NormalizedUserName = "USER@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDLRZd46JSyD78uzrQpFNYlhnzQTMDheoNNW4yNEvTV8FnV/2YLzvRSOSnM23l+vYg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELbBfUaW2c+nlzW2Mvhym64LB6DQIYs2rfxVvr4a6IMxydJANbVHYKuAukc+JrqLKg==",
                             PhoneNumber = "+905349999999",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "ebe67c88-aa1f-4d46-a9be-bac7aa00537e",
+                            SecurityStamp = "b2188c54-df4b-4c68-a214-7b0b563321cd",
                             TwoFactorEnabled = false,
                             UserName = "user@gmail.com"
                         });
@@ -357,7 +365,7 @@ namespace YoutubeBlogMVC.Data.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ImageId")
+                    b.Property<Guid?>("ImageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -374,6 +382,9 @@ namespace YoutubeBlogMVC.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
 
@@ -383,31 +394,35 @@ namespace YoutubeBlogMVC.Data.Migrations
 
                     b.HasIndex("ImageId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Articles");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("92f96bea-3fd3-4f97-9a54-31f086d74fe3"),
+                            Id = new Guid("1e6af603-478a-47b6-87e2-de9a5c9b1fe9"),
                             CategoryId = new Guid("51c55032-6f6a-47d8-833f-144c23fb67a1"),
                             Content = "ASP.NET CORE Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut arcu ante, condimentum non nibh eu, vehicula tristique eros. Praesent metus felis, rhoncus nec neque at, feugiat ultrices ligula. Integer porta, leo et tempor suscipit, mi ligula viverra lectus, nec tristique massa ante ut mi. Etiam eget tempus tortor. Duis facilisis commodo interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dui lectus, sodales in ex id, tincidunt pharetra quam.",
                             CreatedBy = "Admin test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 398, DateTimeKind.Local).AddTicks(7786),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 73, DateTimeKind.Local).AddTicks(9951),
                             ImageId = new Guid("fe3d8ace-339d-40bd-b620-63fc51ce5f59"),
                             IsDeleted = false,
                             Title = "ASP.NET CORE Deneme Makalesi 1",
+                            UserId = new Guid("ab5ceb8f-9dc0-424a-a1c9-495bca357321"),
                             ViewCount = 15
                         },
                         new
                         {
-                            Id = new Guid("19d54016-d492-4aee-816b-818bea06e658"),
+                            Id = new Guid("f7e6a36b-c41b-4373-bc58-870e2b0c1595"),
                             CategoryId = new Guid("bfdeca74-b674-49fd-9a3d-be63b8266645"),
                             Content = "Visual Studio orem ipsum dolor sit amet, consectetur adipiscing elit. Ut arcu ante, condimentum non nibh eu, vehicula tristique eros. Praesent metus felis, rhoncus nec neque at, feugiat ultrices ligula. Integer porta, leo et tempor suscipit, mi ligula viverra lectus, nec tristique massa ante ut mi. Etiam eget tempus tortor. Duis facilisis commodo interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dui lectus, sodales in ex id, tincidunt pharetra quam.",
                             CreatedBy = "Admin test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 398, DateTimeKind.Local).AddTicks(7793),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 73, DateTimeKind.Local).AddTicks(9957),
                             ImageId = new Guid("12e5602d-bd51-4c8f-b0b0-d78024053735"),
                             IsDeleted = false,
                             Title = "Visual Studio Deneme Makalesi 1",
+                            UserId = new Guid("3d75895a-13af-4e93-8091-6cd22c173f83"),
                             ViewCount = 15
                         });
                 });
@@ -453,7 +468,7 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("51c55032-6f6a-47d8-833f-144c23fb67a1"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 398, DateTimeKind.Local).AddTicks(9513),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 74, DateTimeKind.Local).AddTicks(1340),
                             IsDeleted = false,
                             Name = "ASP.NET CORE"
                         },
@@ -461,7 +476,7 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("bfdeca74-b674-49fd-9a3d-be63b8266645"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 398, DateTimeKind.Local).AddTicks(9518),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 74, DateTimeKind.Local).AddTicks(1344),
                             IsDeleted = false,
                             Name = "Visual Studio 2022"
                         });
@@ -512,7 +527,7 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("fe3d8ace-339d-40bd-b620-63fc51ce5f59"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 399, DateTimeKind.Local).AddTicks(869),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 74, DateTimeKind.Local).AddTicks(2656),
                             FileName = "images/test_images",
                             FileType = "jpg",
                             IsDeleted = false
@@ -521,7 +536,7 @@ namespace YoutubeBlogMVC.Data.Migrations
                         {
                             Id = new Guid("12e5602d-bd51-4c8f-b0b0-d78024053735"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2024, 4, 22, 12, 51, 52, 399, DateTimeKind.Local).AddTicks(872),
+                            CreatedDate = new DateTime(2024, 4, 22, 14, 5, 44, 74, DateTimeKind.Local).AddTicks(2661),
                             FileName = "images/vs_images",
                             FileType = "png",
                             IsDeleted = false
@@ -535,6 +550,17 @@ namespace YoutubeBlogMVC.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("YoutubeBlogMVC.Entity.Entities.AppUser", b =>
+                {
+                    b.HasOne("YoutubeBlogMVC.Entity.Entities.Image", "Image")
+                        .WithMany("Users")
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("YoutubeBlogMVC.Entity.Entities.AppUserClaim", b =>
@@ -589,13 +615,24 @@ namespace YoutubeBlogMVC.Data.Migrations
 
                     b.HasOne("YoutubeBlogMVC.Entity.Entities.Image", "Image")
                         .WithMany("Articles")
-                        .HasForeignKey("ImageId")
+                        .HasForeignKey("ImageId");
+
+                    b.HasOne("YoutubeBlogMVC.Entity.Entities.AppUser", "User")
+                        .WithMany("Articles")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
 
                     b.Navigation("Image");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("YoutubeBlogMVC.Entity.Entities.AppUser", b =>
+                {
+                    b.Navigation("Articles");
                 });
 
             modelBuilder.Entity("YoutubeBlogMVC.Entity.Entities.Category", b =>
@@ -606,6 +643,8 @@ namespace YoutubeBlogMVC.Data.Migrations
             modelBuilder.Entity("YoutubeBlogMVC.Entity.Entities.Image", b =>
                 {
                     b.Navigation("Articles");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
