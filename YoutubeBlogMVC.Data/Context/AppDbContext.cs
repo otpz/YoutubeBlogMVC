@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using YoutubeBlogMVC.Data.Mappings;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace YoutubeBlogMVC.Data.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext: IdentityDbContext<AppUser, AppRole, Guid, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
     {
         protected AppDbContext()
         {
@@ -21,7 +22,7 @@ namespace YoutubeBlogMVC.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) // model oluşturulmadan önce yapılacak config'ler
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             //modelBuilder.ApplyConfiguration(new ArticleMap()); // Article Map için yapılan config'leri uygula.
 
