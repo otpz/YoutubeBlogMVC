@@ -23,10 +23,8 @@ namespace YoutubeBlogMVC.Web.Controllers
             return View(articles);
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
-            await _articleService.AddArticleAsync();
-            int res = await _articleService.SaveDbAsync();
             return View();
         }
 

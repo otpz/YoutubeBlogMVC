@@ -1,14 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YoutubeBlogMVC.Data.Context;
-using YoutubeBlogMVC.Data.Repositories.Abstractions;
-using YoutubeBlogMVC.Data.Repositories.Concretes;
-using YoutubeBlogMVC.Data.UnitOfWorks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using YoutubeBlogMVC.Service.Services.Abstraction;
 using YoutubeBlogMVC.Service.Services.Concretes;
 
@@ -18,7 +9,14 @@ namespace YoutubeBlogMVC.Service.Extensions
     {
         public static IServiceCollection LoadServiceLayerExtension(this IServiceCollection services)
         {
+            var assembly = Assembly.GetExecutingAssembly();
+
             services.AddScoped<IArticleService, ArticleService>();
+
+            //Burada automapper'ın eklenmesi durumunda Profile'dan miras alan tüm class'ları dependency'e ekliyor. (dependency injection)
+            services.AddAutoMapper(assembly); // AutoMapper'ın eklendiği katmanın ismi assembly'dir.
+            
+
             return services;
         }
     }
