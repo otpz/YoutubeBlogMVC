@@ -21,5 +21,31 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         {
             return await _unitOfWork.GetRepository<Article>().GetAllAsync();
         }
+
+        public async Task AddArticleAsync()
+        {
+            var article = new Article
+            {
+                Id = Guid.NewGuid(),
+                CategoryId = Guid.Parse("bfdeca74-b674-49fd-9a3d-be63b8266645"),
+                Content = "Content deneme örnek 1",
+                CreatedBy = "Osman Topuz",
+                CreatedDate = DateTime.Now,
+                ImageId = Guid.Parse("12e5602d-bd51-4c8f-b0b0-d78024053735"),
+                IsDeleted = false,
+                ModifiedBy = null,
+                ModifiedDate = null,
+                Title = "Deneme Makale başlık",
+                ViewCount = 0,
+                DeletedBy = null,
+                DeletedDate = null,
+            };
+            await _unitOfWork.GetRepository<Article>().AddAsync(article);
+        }
+
+        public async Task<int> SaveDbAsync()
+        {
+            return await _unitOfWork.SaveAsync();
+        }
     }
 }

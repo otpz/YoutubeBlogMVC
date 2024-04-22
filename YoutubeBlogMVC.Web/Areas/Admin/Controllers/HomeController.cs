@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using YoutubeBlogMVC.Service.Services.Abstraction;
-using YoutubeBlogMVC.Web.Models;
 
-namespace YoutubeBlogMVC.Web.Controllers
+namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,21 +18,7 @@ namespace YoutubeBlogMVC.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var articles = await _articleService.GetAllArticlesAsync();
-            
             return View(articles);
-        }
-
-        public async Task<IActionResult> Privacy()
-        {
-            await _articleService.AddArticleAsync();
-            int res = await _articleService.SaveDbAsync();
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

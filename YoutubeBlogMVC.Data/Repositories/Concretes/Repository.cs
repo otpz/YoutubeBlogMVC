@@ -20,7 +20,6 @@ namespace YoutubeBlogMVC.Data.Repositories.Concretes
         public async Task AddAsync(T entity)
         {
             await Table.AddAsync(entity);
-
         }
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
         {

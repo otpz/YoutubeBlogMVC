@@ -2,7 +2,6 @@
 using YoutubeBlogMVC.Core.Entities;
 using YoutubeBlogMVC.Data.Repositories.Abstractions;
 
-
 namespace YoutubeBlogMVC.Data.UnitOfWorks   
 {
     public interface IUnitOfWork: IAsyncDisposable

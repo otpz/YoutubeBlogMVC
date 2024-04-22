@@ -1,0 +1,13 @@
+﻿@model List<Article>
+
+    <h1>Admin area içerisindesiniz.</h1>
+    @foreach (var item in Model)
+    {
+        <div>
+            <h1>@item.Title</h1>
+            <br/>
+            <h3>@item.Content</h3>
+            <br />
+            <h3>@item.CreatedBy</h3>
+        </div>
+    }
