@@ -5,10 +5,10 @@
         <span class="text-muted fw-light">Makale Yönetimi /</span> Makaleler
     </h4>
     <!-- Basic Bootstrap Table -->
-    <div class="card">
-        <h5 class="card-header">Table Basic</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="articlesTable" width="90%" cellspacing="0">
+    <div class="card ">
+        <div class="table-responsive text-nowrap m-3">
+            <a class="btn btn-success mb-3" asp-area="Admin" asp-controller="Article" asp-action="Add">Makale Ekle <i class="bx bx-plus"></i></a>
+            <table class="table table-bordered" id="articlesTable" width="90%" cellspacing="0" >
                 <thead>
                     <tr>
                         <th>Başlık</th>
@@ -32,7 +32,7 @@
                         </tr>
                     }
                 </tbody>
-                <tfood>
+                @* <tfood>
                     <tr>
                         <th>Başlık</th>
                         <th>Kategori</th>
@@ -41,7 +41,7 @@
                         <th>Durum</th>
                         <th>İşlemler</th>
                     </tr>
-                </tfood>
+                </tfood> *@
             </table>
         </div>
     </div>

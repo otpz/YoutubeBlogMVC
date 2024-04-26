@@ -12,7 +12,7 @@ namespace YoutubeBlogMVC.Service.Extensions
             var assembly = Assembly.GetExecutingAssembly();
 
             services.AddScoped<IArticleService, ArticleService>();
-
+            services.AddScoped<ICategoryService, CategoryService>();
             //Burada automapper'ın eklenmesi durumunda Profile'dan miras alan tüm class'ları dependency'e ekliyor. (dependency injection)
             services.AddAutoMapper(assembly); // AutoMapper'ın eklendiği katmanın ismi assembly'dir.
             

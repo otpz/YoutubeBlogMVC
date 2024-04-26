@@ -15,6 +15,23 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task CreateArticleAsync(ArticleAddModelView articleAddModelView)
+        {
+            var userId = Guid.Parse("AB5CEB8F-9DC0-424A-A1C9-495BCA357321");
+
+            var article = new Article
+            {
+                Title = articleAddModelView.Title,
+                Content = articleAddModelView.Content,
+                CategoryId = articleAddModelView.CategoryId,
+                UserId = userId,
+            };
+
+            await _unitOfWork.GetRepository<Article>().AddAsync(article);
+            await _unitOfWork.SaveAsync();
+        }
+
         public async Task<List<ArticleModelView>> GetAllArticlesWithCategoryNonDeletedAsync()
         {
             var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(x => x.IsDeleted == false, x=> x.Category);

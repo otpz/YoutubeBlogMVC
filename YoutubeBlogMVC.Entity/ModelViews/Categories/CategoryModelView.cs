@@ -8,6 +8,7 @@ namespace YoutubeBlogMVC.Entity.ModelViews.Categories
 {
     public class CategoryModelView
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
 
     }
