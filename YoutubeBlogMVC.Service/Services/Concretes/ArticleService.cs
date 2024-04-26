@@ -15,9 +15,9 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<List<ArticleModelView>> GetAllArticlesAsync()
+        public async Task<List<ArticleModelView>> GetAllArticlesWithCategoryNonDeletedAsync()
         {
-            var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync();
+            var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(x => x.IsDeleted == false, x=> x.Category);
             var map = _mapper.Map<List<ArticleModelView>>(articles);
             return map;
         }

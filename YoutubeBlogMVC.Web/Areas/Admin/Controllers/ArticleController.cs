@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YoutubeBlogMVC.Service.Services.Abstraction;
 
 namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-    public class HomeController : Controller
+    public class ArticleController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IArticleService _articleService;
 
-        public HomeController(ILogger<HomeController> logger, IArticleService articleService)
+        public ArticleController(IArticleService articleService)
         {
-            _logger = logger;
             _articleService = articleService;
         }
 

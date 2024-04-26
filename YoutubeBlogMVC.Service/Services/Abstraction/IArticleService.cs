@@ -10,7 +10,7 @@ namespace YoutubeBlogMVC.Service.Services.Abstraction
 {
     public interface IArticleService    
     {
-        Task<List<ArticleModelView>> GetAllArticlesAsync();
+        Task<List<ArticleModelView>> GetAllArticlesWithCategoryNonDeletedAsync();
         Task<int> SaveDbAsync();
     }
 }
