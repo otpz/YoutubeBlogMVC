@@ -12,9 +12,9 @@ namespace YoutubeBlogMVC.Service.Services.Abstraction
     {
         Task<List<ArticleModelView>> GetAllArticlesWithCategoryNonDeletedAsync();
         Task<ArticleModelView> GetArticlesWithCategoryNonDeletedAsync(Guid articleId);
-        Task UpdateArticleAsync(ArticleUpdateModelView articleUpdateModelView);
+        Task<string> UpdateArticleAsync(ArticleUpdateModelView articleUpdateModelView);
         Task CreateArticleAsync(ArticleAddModelView articleAddModelView);
-        Task SafeDeleteArticleAsync(Guid articleId);
+        Task<string> SafeDeleteArticleAsync(Guid articleId);
         Task<int> SaveDbAsync();
     }
 }

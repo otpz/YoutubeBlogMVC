@@ -13,13 +13,14 @@ namespace YoutubeBlogMVC.Entity.Entities
             
         }
 
-        public Article(string title, string content, Guid userId, Guid categoryId, Guid imageId)
+        public Article(string title, string content, Guid userId, string createdBy, Guid categoryId, Guid imageId)
         {
             Title = title;
             Content = content;
             UserId = userId;
             CategoryId = categoryId;
             ImageId = imageId;
+            CreatedBy = createdBy;
             //ViewCount = 0; // burada viewcount = 0 denebilir fakat ctor'un amacı bu değildir, parametrelerden okumaktır.
         }
 

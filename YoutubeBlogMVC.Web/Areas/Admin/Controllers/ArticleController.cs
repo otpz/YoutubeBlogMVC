@@ -2,9 +2,11 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Entity.ModelViews.Articles;
 using YoutubeBlogMVC.Service.Services.Abstraction;
+using YoutubeBlogMVC.Web.ResultMessages;
 
 namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
 {
@@ -15,13 +17,15 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly IValidator<Article> _validator;
+        private readonly IToastNotification _toastNotification;
 
-        public ArticleController(IArticleService articleService, ICategoryService categoryService, IMapper mapper, IValidator<Article> validator)
+        public ArticleController(IArticleService articleService, ICategoryService categoryService, IMapper mapper, IValidator<Article> validator, IToastNotification toastNotification) 
         {
             _articleService = articleService;
             _categoryService = categoryService;
             _mapper = mapper;
             _validator = validator;
+            _toastNotification = toastNotification;
         }
 
         public async Task<IActionResult> Index()
@@ -46,10 +50,11 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             {
                 result.AddToModelState(this.ModelState);
                 var categories = await _categoryService.GetAllCategoriesNonDeleted();
+                _toastNotification.AddErrorToastMessage("İşlem başarısız.", new ToastrOptions { Title = "Başarısız"});
                 return View(new ArticleAddModelView { Categories = categories });
                 // yukarıdaki işlemler validation içindir.
             }
-
+            _toastNotification.AddSuccessToastMessage(Messages.Article.Add(articleAddModelView.Title), new ToastrOptions { Title = "Başarılı" });
             await _articleService.CreateArticleAsync(articleAddModelView);
             return RedirectToAction("Index", "Article", new { Area = "Admin" });
         }
@@ -76,20 +81,23 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);
+                _toastNotification.AddErrorToastMessage("İşlem başarısız.", new ToastrOptions{Title = "Başarısız"});
                 // yukarıdaki işlemler validation içindir.
             }
 
-            await _articleService.UpdateArticleAsync(articleUpdateModelView);
+            
+            var title = await _articleService.UpdateArticleAsync(articleUpdateModelView);
+
             articleUpdateModelView.Categories = categories;
+            _toastNotification.AddSuccessToastMessage(Messages.Article.Update(title), new ToastrOptions { Title = "Başarılı" });
             return View(articleUpdateModelView);
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(Guid articleId) 
         {
-
-            await _articleService.SafeDeleteArticleAsync(articleId);
-
+            string title = await _articleService.SafeDeleteArticleAsync(articleId);
+            _toastNotification.AddSuccessToastMessage(Messages.Article.Delete(title), new ToastrOptions { Title = "Başarılı"});
             return RedirectToAction("Index", "Article", new { Area = "Admin" });
         }
 
