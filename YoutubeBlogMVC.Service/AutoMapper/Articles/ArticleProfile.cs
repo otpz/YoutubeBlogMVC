@@ -13,6 +13,7 @@ namespace YoutubeBlogMVC.Service.AutoMapper.Articles
             CreateMap<ArticleModelView, Article>().ReverseMap();
             CreateMap<ArticleUpdateModelView, Article>().ReverseMap();
             CreateMap<ArticleUpdateModelView, ArticleModelView>().ReverseMap();
+            CreateMap<ArticleAddModelView, Article>().ReverseMap();
         }
     }
 }

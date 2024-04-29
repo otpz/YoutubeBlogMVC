@@ -8,6 +8,7 @@
         <div class="col-md-12">
             <div class="card mb-2">
                 <form asp-controller="Article" asp-action="Add" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly"></div>
                     <div class="card-body">
                         <div class="mb-3 form-group">
                             <label asp-for="CategoryId">Kategori</label>
@@ -16,12 +17,13 @@
                         </div>
                         <div class="mb-3 form-group">
                             <label asp-for="Title" class="form-label">Başlık</label>
-                            <input asp-for="Title" name="Title"  type="text" class="form-control" id="defaultFormControlInput" placeholder="Başlık" aria-describedby="defaultFormControlHelp">
+                            <input asp-for="Title" name="Title" type="text" class="form-control" id="defaultFormControlInput" placeholder="Başlık" aria-describedby="defaultFormControlHelp">
+                            <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                         <div class="mb-3 form-group">
                             <label asp-for="Content" class="form-label">İçerik</label>
-                            <textarea asp-for="Content" name="Content" type="text" class="form-control" id="defaultFormControlInput" placeholder="İçerik" aria-describedby="defaultFormControlHelp" style="min-height: 200px">
-                            </textarea>
+                            <textarea asp-for="Content" name="Content" type="text" class="form-control" id="defaultFormControlInput" placeholder="İçerik" aria-describedby="defaultFormControlHelp" style="min-height: 200px"></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
                         <div class="mb-3 form-group">
                             <button class="btn btn-primary btn-block" type="submit">Ekle <i class="bx bx-plus"></i></button>
