@@ -21,6 +21,7 @@ namespace YoutubeBlogMVC.Data.Repositories.Concretes
         {
             await Table.AddAsync(entity);
         }
+
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = Table;

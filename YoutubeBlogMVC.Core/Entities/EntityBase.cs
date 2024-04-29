@@ -2,6 +2,7 @@
 {
     public abstract class EntityBase : IEntityBase
     {
+
         public virtual Guid Id { get; set; } = Guid.NewGuid();
         public virtual string CreatedBy { get; set; } = "undefined";
         public virtual string? ModifiedBy { get; set; }

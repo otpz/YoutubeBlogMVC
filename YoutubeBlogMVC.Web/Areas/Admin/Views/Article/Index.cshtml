@@ -28,7 +28,10 @@
                             <td>@article.CreatedBy</td>
                             <td>@article.CreatedDate</td>
                             <td>@(article.IsDeleted == true ? "Silindi" : "Silinmedi")</td>
-                            <td></td>
+                            <td>
+                                <a asp-route-articleId="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Update" class="btn btn-primary btn-sm" data-id="@article.Id">Düzenle <i class="bx bxs-edit"></i></a>
+                                <a asp-route-articleId="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Delete" class="btn btn-danger btn-sm" data-id="@article.Id">Sil<i class="bx bxs-minus-circle"></i></a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -45,8 +48,6 @@
             </table>
         </div>
     </div>
-    <!--/ Basic Bootstrap Table -->
-    <hr class="my-5">
 </div>
 
 @section Scripts {

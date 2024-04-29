@@ -11,6 +11,8 @@ namespace YoutubeBlogMVC.Service.AutoMapper.Articles
         {
             // aşağıda bir map'leme işlemi yaptık. ModelView ile Article birbirine map'lendi.
             CreateMap<ArticleModelView, Article>().ReverseMap();
+            CreateMap<ArticleUpdateModelView, Article>().ReverseMap();
+            CreateMap<ArticleUpdateModelView, ArticleModelView>().ReverseMap();
         }
     }
 }
