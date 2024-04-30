@@ -28,6 +28,17 @@
                             </textarea>
                             <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
+                        <div class="row">
+                            <div class="mb-3 form-group col-md-6">
+                                <label asp-for="Image.FileName" class="form-label d-block">Mevcut Resim</label>
+                                <img src="~/images/@Model.Image.FileName" class="mb-3" alt="@Model.Title" style="width:25em; height:25em;" />
+                            </div>
+                            <div class="mb-3 form-group col-md-6">
+                                <label asp-for="Photo" class="form-label">Resim Seçiniz</label>
+                                <input asp-for="Photo" name="Photo" type="file" accept="image/*" class="form-control" id="defaultFormControlInput" aria-describedby="defaultFormControlHelp">
+                                <span asp-validation-for="Photo" class="text-danger"></span>
+                            </div>
+                        </div>
                         <div class="mb-3 form-group">
                             <button class="btn btn-primary btn-block" type="submit">Kaydet <i class="bx bx-save"></i></button>
                         </div>

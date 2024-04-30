@@ -90,7 +90,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
 
             articleUpdateModelView.Categories = categories;
             _toastNotification.AddSuccessToastMessage(Messages.Article.Update(title), new ToastrOptions { Title = "Başarılı" });
-            return View(articleUpdateModelView);
+            return RedirectToAction("Index", "Article", new { Area = "Admin" });
         }
 
         [HttpGet]

@@ -26,6 +26,11 @@
                             <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
                         <div class="mb-3 form-group">
+                            <label asp-for="Photo" class="form-label">Resim Seçiniz</label>
+                            <input asp-for="Photo" name="Photo" type="file" accept="image/*" class="form-control" id="defaultFormControlInput" aria-describedby="defaultFormControlHelp">
+                            <span asp-validation-for="Photo" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 form-group">
                             <button class="btn btn-primary btn-block" type="submit">Ekle <i class="bx bx-plus"></i></button>
                         </div>
                     </div>

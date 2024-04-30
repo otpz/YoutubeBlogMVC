@@ -6,7 +6,9 @@ using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Entity.ModelViews.Articles;
 using YoutubeBlogMVC.Entity.ModelViews.Categories;
 using YoutubeBlogMVC.Service.Extensions;
+using YoutubeBlogMVC.Service.Helpers.Images;
 using YoutubeBlogMVC.Service.Services.Abstraction;
+using YoutubeBlogMVC.Entity.Enums;
 
 namespace YoutubeBlogMVC.Service.Services.Concretes
 {
@@ -15,13 +17,15 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IImageHelper _imageHelper;
         private readonly ClaimsPrincipal _user;
 
-        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, IImageHelper imageHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _imageHelper = imageHelper;
             _user = httpContextAccessor.HttpContext.User;
         }
 
@@ -43,7 +47,18 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         public async Task<string> UpdateArticleAsync(ArticleUpdateModelView articleUpdateModelView)
         {
             var userEmail = _user.GetLoggedInEmail();
-            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleUpdateModelView.Id, x => x.Category);
+            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleUpdateModelView.Id, x => x.Category, i=>i.Image);
+
+            if (articleUpdateModelView.Photo != null)
+            {
+                _imageHelper.Delete(article.Image.FileName);
+
+                var imageUpload = await _imageHelper.Upload(articleUpdateModelView.Title, articleUpdateModelView.Photo, ImageType.Post);
+                Image image = new(imageUpload.FullName, articleUpdateModelView.Photo.ContentType, userEmail);
+                await _unitOfWork.GetRepository<Image>().AddAsync(image);
+
+                article.ImageId = image.Id;
+            }
 
             article.Title = articleUpdateModelView.Title;
             article.CategoryId = articleUpdateModelView.CategoryId;
@@ -61,9 +76,12 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         {
             var userId = _user.GetLoggedInUserId();
             var userEmail = _user.GetLoggedInEmail();
-            var imageId = Guid.Parse("FE3D8ACE-339D-40BD-B620-63FC51CE5F59");
 
-            var article = new Article(articleAddModelView.Title, articleAddModelView.Content, userId, userEmail, articleAddModelView.CategoryId, imageId);
+            var imageUpload = await _imageHelper.Upload(articleAddModelView.Title, articleAddModelView.Photo, ImageType.Post);
+            Image image = new(imageUpload.FullName, articleAddModelView.Photo.ContentType, userEmail);
+            await _unitOfWork.GetRepository<Image>().AddAsync(image);
+
+            var article = new Article(articleAddModelView.Title, articleAddModelView.Content, userId, userEmail, articleAddModelView.CategoryId, image.Id);
 
             await _unitOfWork.GetRepository<Article>().AddAsync(article);
             await _unitOfWork.SaveAsync();
@@ -78,7 +96,7 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
 
         public async Task<ArticleModelView> GetArticlesWithCategoryNonDeletedAsync(Guid articleId)
         {
-            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category);
+            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category, i=>i.Image);
             var map = _mapper.Map<ArticleModelView>(article);
             return map;
         }

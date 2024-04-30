@@ -1,4 +1,5 @@
-﻿using YoutubeBlogMVC.Entity.ModelViews.Categories;
+﻿using YoutubeBlogMVC.Entity.Entities;
+using YoutubeBlogMVC.Entity.ModelViews.Categories;
 
 namespace YoutubeBlogMVC.Entity.ModelViews.Articles
 {
@@ -9,6 +10,7 @@ namespace YoutubeBlogMVC.Entity.ModelViews.Articles
         public string Content { get; set; }
         public CategoryModelView Category { get; set; }
         public DateTime CreatedDate { get; set; }
+        public Image Image { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
 
