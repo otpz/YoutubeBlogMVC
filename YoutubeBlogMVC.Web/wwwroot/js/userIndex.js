@@ -1,6 +1,6 @@
 ﻿
 $(document).ready(function () {
-    $('#categoriesTable').DataTable({
+    $('#usersTable').DataTable({
         dom:
             "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
             "<'row'<'col-sm-12'tr>>" +
@@ -40,5 +40,5 @@ $(document).ready(function () {
         }
     });
 });
-//categoryIndex.js
-//categoryIndex.js görüntüleniyor.
+//userIndex.js
+//userIndex.js görüntüleniyor.
