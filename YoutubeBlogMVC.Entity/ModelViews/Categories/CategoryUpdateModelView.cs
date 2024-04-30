@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace YoutubeBlogMVC.Entity.ModelViews.Categories
 {
-    public class CategoryModelView
+    public class CategoryUpdateModelView
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public bool IsDeleted { get; set; } 
-
     }
 }

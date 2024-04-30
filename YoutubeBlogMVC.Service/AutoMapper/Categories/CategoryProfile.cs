@@ -14,6 +14,8 @@ namespace YoutubeBlogMVC.Service.AutoMapper.Categories
         public CategoryProfile()
         {
             CreateMap<CategoryModelView, Category>().ReverseMap();
+            CreateMap<CategoryAddModelView, Category>().ReverseMap();
+            CreateMap<CategoryUpdateModelView, Category>().ReverseMap();
         }
     }
 }

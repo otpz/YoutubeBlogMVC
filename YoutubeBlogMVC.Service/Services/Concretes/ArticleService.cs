@@ -25,8 +25,8 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
-            _imageHelper = imageHelper;
             _user = httpContextAccessor.HttpContext.User;
+            _imageHelper = imageHelper;
         }
 
         public async Task<string> SafeDeleteArticleAsync(Guid articleId)
