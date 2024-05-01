@@ -19,7 +19,6 @@ namespace YoutubeBlogMVC.Data.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder) // model oluşturulmadan önce yapılacak config'ler
         {
             base.OnModelCreating(modelBuilder);
