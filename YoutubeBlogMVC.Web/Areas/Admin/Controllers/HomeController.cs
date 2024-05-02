@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Service.Services.Abstraction;
 
 namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers

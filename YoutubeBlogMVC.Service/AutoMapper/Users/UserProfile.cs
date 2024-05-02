@@ -16,6 +16,7 @@ namespace YoutubeBlogMVC.Service.AutoMapper.Users
             CreateMap<AppUser, UserModelView>().ReverseMap();
             CreateMap<AppUser, UserAddModelView>().ReverseMap();
             CreateMap<AppUser, UserUpdateModelView>().ReverseMap();
+            CreateMap<AppUser, UserProfileModelView>().ReverseMap();
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Entity.ModelViews.Articles;
 using YoutubeBlogMVC.Service.Services.Abstraction;
+using YoutubeBlogMVC.Web.Const;
 using YoutubeBlogMVC.Web.ResultMessages;
 
 namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
@@ -27,14 +29,15 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             _validator = validator;
             _toastNotification = toastNotification;
         }
-        
+        [HttpGet]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}, {RoleConst.User}")]
         public async Task<IActionResult> Index()
         {
             var articles = await _articleService.GetAllArticlesWithCategoryNonDeletedAsync();
             return View(articles);
         }
         [HttpGet]
-
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> DeletedArticle()
         {
             var articles = await _articleService.GetAllArticlesWithCategoryDeletedAsync();
@@ -42,6 +45,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> Add()
         {
             var categories = await _categoryService.GetAllCategoriesNonDeleted();
@@ -49,6 +53,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> Add(ArticleAddModelView articleAddModelView)
         {
             var map = _mapper.Map<Article>(articleAddModelView);
@@ -67,6 +72,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> Update(Guid articleId)
         {
             var article = await _articleService.GetArticlesWithCategoryNonDeletedAsync(articleId);
@@ -79,6 +85,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> Update(ArticleUpdateModelView articleUpdateModelView)
         {
             var map = _mapper.Map<Article>(articleUpdateModelView);
@@ -101,6 +108,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}, {RoleConst.Admin}")]
         public async Task<IActionResult> Delete(Guid articleId) 
         {
             string title = await _articleService.SafeDeleteArticleAsync(articleId);
@@ -109,6 +117,7 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConst.SuperAdmin}")]
         public async Task<IActionResult> UndoDelete(Guid articleId)
         {
             string title = await _articleService.UndoDeleteArticleAsync(articleId);
