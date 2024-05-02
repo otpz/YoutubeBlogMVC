@@ -1,0 +1,54 @@
+﻿@model List<ArticleModelView>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Çöp Kutusu/</span> Silinmiş Makaleler
+    </h4>
+    <!-- Basic Bootstrap Table -->
+    <div class="card ">
+        <div class="table-responsive text-nowrap m-3">
+            <table class="table table-bordered" id="articlesTable" width="90%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Başlık</th>
+                        <th>Kategori</th>
+                        <th>Oluşturan</th>
+                        <th>Oluşturma Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var article in Model)
+                    {
+                        <tr name="@article.Id">
+                            <td class="text-truncate">@article.Title</td>
+                            <td>@article.Category.Name</td>
+                            <td>@article.CreatedBy</td>
+                            <td>@article.CreatedDate</td>
+                            <td>@(article.IsDeleted == true ? "Silindi" : "Silinmedi")</td>
+                            <td>
+                                <a asp-route-articleId="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="UndoDelete" class="btn btn-warning btn-sm" data-id="@article.Id">Geri Al <i class='bx bx-undo'></i></a>
+                                @* <a asp-route-articleId="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Delete" class="btn btn-danger btn-sm" data-id="@article.Id">Sil<i class="bx bxs-minus-circle"></i></a> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @* <tfood>
+                <tr>
+                <th>Başlık</th>
+                <th>Kategori</th>
+                <th>Oluşturan</th>
+                <th>Oluşturma Tarihi</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+                </tr>
+                </tfood> *@
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/articleIndex.js" type="text/javascript"></script>
+}

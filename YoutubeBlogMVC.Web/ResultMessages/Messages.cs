@@ -16,6 +16,10 @@
             {
                 return $"{articleTitle} başlıklı makale başarıyla silinmiştir.";
             }
+            public static string UndoDelete(string articleTitle)
+            {
+                return $"{articleTitle} başlıklı makale başarıyla geri getirilmiştir..";
+            }
         }
 
         public static class Category
@@ -32,6 +36,12 @@
             {
                 return $"{categoryName} adlı kategori başarıyla silinmiştir.";
             }
+
+            public static string UndoDelete(string categoryName)
+            {
+                return $"{categoryName} adlı kategori başarıyla geri alınmıştır.";
+            }
+
         }
 
         public static class User

@@ -27,10 +27,17 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             _validator = validator;
             _toastNotification = toastNotification;
         }
-
+        
         public async Task<IActionResult> Index()
         {
             var articles = await _articleService.GetAllArticlesWithCategoryNonDeletedAsync();
+            return View(articles);
+        }
+        [HttpGet]
+
+        public async Task<IActionResult> DeletedArticle()
+        {
+            var articles = await _articleService.GetAllArticlesWithCategoryDeletedAsync();
             return View(articles);
         }
 
@@ -99,6 +106,14 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             string title = await _articleService.SafeDeleteArticleAsync(articleId);
             _toastNotification.AddSuccessToastMessage(Messages.Article.Delete(title), new ToastrOptions { Title = "Başarılı"});
             return RedirectToAction("Index", "Article", new { Area = "Admin" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UndoDelete(Guid articleId)
+        {
+            string title = await _articleService.UndoDeleteArticleAsync(articleId);
+            _toastNotification.AddSuccessToastMessage(Messages.Article.UndoDelete(title), new ToastrOptions { Title = "Başarılı" });
+            return RedirectToAction("DeletedArticle", "Article", new { Area = "Admin" });
         }
 
     }

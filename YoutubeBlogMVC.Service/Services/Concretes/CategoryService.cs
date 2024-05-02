@@ -31,6 +31,13 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
             return map;
         }
 
+        public async Task<List<CategoryModelView>> GetAllCategoriesDeleted()
+        {
+            var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(x => x.IsDeleted);
+            var map = _mapper.Map<List<CategoryModelView>>(categories);
+            return map;
+        }
+
         public async Task CreateCategoryAsync(CategoryAddModelView categoryAddModelView)
         {
             var userEmail = _user.GetLoggedInEmail();
@@ -67,6 +74,20 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
             category.IsDeleted = true;
             category.DeletedDate = DateTime.Now;
             category.DeletedBy = userEmail;
+
+            await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+
+            return category.Name;
+        }
+
+        public async Task<string> UndoDeleteCategoryAsync(Guid categoryId)
+        {
+            var category = await _unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryId);
+
+            category.IsDeleted = false;
+            category.DeletedDate = null;
+            category.DeletedBy = null;
 
             await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             await _unitOfWork.SaveAsync();

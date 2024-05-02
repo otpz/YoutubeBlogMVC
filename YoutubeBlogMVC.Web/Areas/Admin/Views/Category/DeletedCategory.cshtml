@@ -1,0 +1,42 @@
+﻿@model List<CategoryModelView>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Çöp Kutusu/</span> Silinmiş Kategoriler
+    </h4>
+    <!-- Basic Bootstrap Table -->
+    <div class="card ">
+        <div class="table-responsive text-nowrap m-3">
+            <table class="table table-bordered" id="categoriesTable" width="90%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>İsim</th>
+                        <th>Oluşturan</th>
+                        <th>Oluşturma Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach (var category in Model)
+                    {
+                        <tr name="@category.Id">
+                            <td>@category.Name</td>
+                            <td>@category.CreatedBy</td>
+                            <td>@category.CreatedDate</td>
+                            <td>@(category.IsDeleted == true ? "Silindi" : "Silinmedi")</td>
+                            <td>
+                                <a asp-route-categoryId="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="UndoDelete" class="btn btn-warning btn-sm" data-id="@category.Id">Geri Al <i class="bx bx-undo"></i></a>
+                                @* <a asp-route-categoryId="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="Delete" class="btn btn-danger btn-sm" data-id="@category.Id">Sil<i class="bx bxs-minus-circle"></i></a> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/categoryIndex.js" type="text/javascript"></script>
+}

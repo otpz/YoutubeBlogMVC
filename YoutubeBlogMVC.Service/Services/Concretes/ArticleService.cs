@@ -105,5 +105,27 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         {
             return await _unitOfWork.SaveAsync();
         }
+
+        public async Task<List<ArticleModelView>> GetAllArticlesWithCategoryDeletedAsync()
+        {
+            var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(x => x.IsDeleted, x => x.Category);
+            var map = _mapper.Map<List<ArticleModelView>>(articles);
+
+            return map;
+        }
+
+        public async Task<string> UndoDeleteArticleAsync(Guid articleId)
+        {
+            var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+
+            article.IsDeleted = false;
+            article.DeletedDate = null;
+            article.DeletedBy = null;
+
+            await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
+            await _unitOfWork.SaveAsync();
+
+            return article.Title;
+        }
     }
 }
