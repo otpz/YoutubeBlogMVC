@@ -5,6 +5,7 @@ using YoutubeBlogMVC.Data.Extensions;
 using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Service.Extensions;
 using NToastNotify;
+using YoutubeBlogMVC.Service.Describers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
     opt.Password.RequireUppercase = false;
 })
     .AddRoleManager<RoleManager<AppRole>>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 

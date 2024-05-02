@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +18,15 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IValidator<AppUser> _validator;
         private readonly IMapper _mapper;
         private readonly IToastNotification _toastNotification;
 
-        public UserController(UserManager<AppUser> userManager,RoleManager<AppRole> roleManager, IMapper mapper, IToastNotification toastNotification)
+        public UserController(UserManager<AppUser> userManager,RoleManager<AppRole> roleManager, IValidator<AppUser> validator, IMapper mapper, IToastNotification toastNotification)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _validator = validator;
             _mapper = mapper;
             _toastNotification = toastNotification;
         }
@@ -53,9 +57,10 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Add(UserAddModelView userAddModelView)
         {
             var userMap = _mapper.Map<AppUser>(userAddModelView); // add mv'den user'a map'leme işlemi yapıldı.
+            var validation = await _validator.ValidateAsync(userMap);
             var roles = await _roleManager.Roles.ToListAsync();
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
             {
                 userMap.UserName = userAddModelView.Email;
                 var result = await _userManager.CreateAsync(userMap, string.IsNullOrEmpty(userAddModelView.Password) ? "" : userAddModelView.Password);
@@ -70,8 +75,9 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
                     foreach (var errors in result.Errors)
                     {
                         ModelState.AddModelError("", errors.Description);
-                        return View(new UserAddModelView { Roles = roles });
                     }
+                    validation.AddToModelState(this.ModelState);
+                    return View(new UserAddModelView { Roles = roles });
                 }
             }
 
@@ -101,26 +107,38 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
                 var roles = await _roleManager.Roles.ToListAsync();
                 if (ModelState.IsValid)
                 {
-                    _mapper.Map(userUpdateModelView, user); // update mv'dan user'a yeni gelen alanları aktardık.
-                    user.UserName = userUpdateModelView.Email;
-                    user.SecurityStamp = Guid.NewGuid().ToString();
-                    var result = await _userManager.UpdateAsync(user);
+                    var map = _mapper.Map(userUpdateModelView, user); // update mv'dan user'a yeni gelen alanları aktardık.
+                    var validation = await _validator.ValidateAsync(map);
 
-                    if (result.Succeeded)
+                    if (validation.IsValid)
                     {
-                        await _userManager.RemoveFromRoleAsync(user, userRole);
-                        var findRole = await _roleManager.FindByIdAsync(userUpdateModelView.RoleId.ToString());
-                        await _userManager.AddToRoleAsync(user, findRole.Name);
-                        _toastNotification.AddSuccessToastMessage(Messages.User.Update(userUpdateModelView.Email), new ToastrOptions { Title = "Başarılı" });
-                        return RedirectToAction("Index", "User", new { Area = "Admin" });
+                        user.UserName = userUpdateModelView.Email;
+                        user.SecurityStamp = Guid.NewGuid().ToString();
+                        var result = await _userManager.UpdateAsync(user);
+
+                        if (result.Succeeded)
+                        {
+                            await _userManager.RemoveFromRoleAsync(user, userRole);
+                            var findRole = await _roleManager.FindByIdAsync(userUpdateModelView.RoleId.ToString());
+                            await _userManager.AddToRoleAsync(user, findRole.Name);
+                            _toastNotification.AddSuccessToastMessage(Messages.User.Update(userUpdateModelView.Email), new ToastrOptions { Title = "Başarılı" });
+                            return RedirectToAction("Index", "User", new { Area = "Admin" });
+                        }
+                        else
+                        {
+                            foreach (var errors in result.Errors)
+                            {
+                                ModelState.AddModelError("", errors.Description);
+                            }
+                            validation.AddToModelState(this.ModelState);
+                            return View(new UserUpdateModelView { Roles = roles });
+
+                        }
                     }
                     else
                     {
-                        foreach (var errors in result.Errors)
-                        {
-                            ModelState.AddModelError("", errors.Description);
-                            return View(new UserUpdateModelView { Roles = roles });
-                        }
+                        validation.AddToModelState(this.ModelState);
+                        return View(new UserUpdateModelView { Roles = roles });
                     }
 
                 }
