@@ -22,26 +22,16 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class UserController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly IValidator<AppUser> _validator;
         private readonly IMapper _mapper;
         private readonly IToastNotification _toastNotification;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly IImageHelper _imageHelper;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, UserManager<AppUser> userManager,RoleManager<AppRole> roleManager, IValidator<AppUser> validator, IMapper mapper, IToastNotification toastNotification, SignInManager<AppUser> signInManager, IImageHelper imageHelper, IUnitOfWork unitOfWork)
+        public UserController(IUserService userService, IValidator<AppUser> validator, IMapper mapper, IToastNotification toastNotification)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _validator = validator;
             _mapper = mapper;
             _toastNotification = toastNotification;
-            _signInManager = signInManager;
-            _imageHelper = imageHelper;
-            _unitOfWork = unitOfWork;
             _userService = userService;
         }
 
