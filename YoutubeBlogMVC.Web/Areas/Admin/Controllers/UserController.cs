@@ -169,79 +169,30 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var userImage = await _unitOfWork.GetRepository<AppUser>().GetAsync(x => x.Id == user.Id, x => x.Image);
-            var map = _mapper.Map<UserProfileModelView>(user);
-
-            map.Image.FileName = userImage.Image.FileName;
-            
-            return View(map);
+            var userMap = await _userService.GetUserProfileAsync();
+            return View(userMap);
         }
 
         [HttpPost]
         public async Task<IActionResult> Profile(UserProfileModelView userProfileModelView)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
             if (ModelState.IsValid)
             {
-                var isVerified = await _userManager.CheckPasswordAsync(user, userProfileModelView.CurrentPassword);
-                if (isVerified && userProfileModelView.NewPassword != null && userProfileModelView.Photo != null)
+                var result = await _userService.UserProfileUpdateAsync(userProfileModelView);
+                if (result)
                 {
-                    var result = await _userManager.ChangePasswordAsync(user, userProfileModelView.CurrentPassword, userProfileModelView.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        await _userManager.UpdateSecurityStampAsync(user);
-                        await _signInManager.SignOutAsync();
-                        await _signInManager.PasswordSignInAsync(user, userProfileModelView.NewPassword, true, false);
-
-                        user.FirstName = userProfileModelView.FirstName;
-                        user.LastName = userProfileModelView.LastName;
-                        user.PhoneNumber = userProfileModelView.PhoneNumber;
-
-                        var imageUpload = await _imageHelper.Upload($"{userProfileModelView.FirstName} {userProfileModelView.LastName}", userProfileModelView.Photo, ImageType.User);
-                        Image image = new(imageUpload.FullName, userProfileModelView.Photo.ContentType, user.Email);
-                        
-                        await _unitOfWork.GetRepository<Image>().AddAsync(image);
-
-                        user.ImageId = image.Id;
-                        await _userManager.UpdateAsync(user);
-
-                        await _unitOfWork.SaveAsync();
-
-
-                        _toastNotification.AddSuccessToastMessage("Şifreniz ve bilgileriniz başarıyla değiştirilmiştir.");
-                        return RedirectToAction("Profile", "User", new { Area = "Admin" });
-                    }
-                    else
-                    {
-                       return RedirectToAction("Profile", "User", new { Area = "Admin" });
-                    }
+                    _toastNotification.AddSuccessToastMessage("Profil güncelleme işlemi başarıyla tamamlandı.", new ToastrOptions { Title = "Başarılı" });
                 }
-                else if (isVerified && userProfileModelView.Photo != null)
+                else
                 {
-                    await _userManager.UpdateSecurityStampAsync(user);
-                    user.FirstName = userProfileModelView.FirstName;
-                    user.LastName = userProfileModelView.LastName;
-                    user.PhoneNumber = userProfileModelView.PhoneNumber;
-
-                    var imageUpload = await _imageHelper.Upload($"{userProfileModelView.FirstName} {userProfileModelView.LastName}", userProfileModelView.Photo, ImageType.User);
-                    Image image = new(imageUpload.FullName, userProfileModelView.Photo.ContentType, user.Email);
-
-                    await _unitOfWork.GetRepository<Image>().AddAsync(image);
-
-                    user.ImageId = image.Id;
-                    await _userManager.UpdateAsync(user);
-                    await _unitOfWork.SaveAsync();
-                    _toastNotification.AddSuccessToastMessage("Bilgileriniz başarıyla değiştirilmiştir.");
-                   return RedirectToAction("Profile", "User", new { Area = "Admin" });
-                } else
-                {
-                    _toastNotification.AddErrorToastMessage("Bilgileriniz güncellenirken bir hata oluştu");
-                   return RedirectToAction("Profile", "User", new { Area = "Admin" });
+                    var profile = await _userService.GetUserProfileAsync();
+                    _toastNotification.AddErrorToastMessage("Profil güncellenirken bir hata oluştu.", new ToastrOptions { Title = "Hata!" });
+                    return View(profile);
                 }
+                return RedirectToAction("Profile", "User", new { Area = "Admin" });
             }
-           return RedirectToAction("Profile", "User", new { Area = "Admin" });
+            else
+                return NotFound();
         }
-
     }
 }

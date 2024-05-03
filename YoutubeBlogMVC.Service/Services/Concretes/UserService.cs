@@ -1,15 +1,20 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeBlogMVC.Data.UnitOfWorks;
 using YoutubeBlogMVC.Entity.Entities;
 using YoutubeBlogMVC.Entity.ModelViews.Users;
+using YoutubeBlogMVC.Service.Extensions;
+using YoutubeBlogMVC.Service.Helpers.Images;
 using YoutubeBlogMVC.Service.Services.Abstraction;
+using YoutubeBlogMVC.Entity.Enums;
 
 namespace YoutubeBlogMVC.Service.Services.Concretes
 {
@@ -19,13 +24,21 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IImageHelper _imageHelper;
+        private readonly ClaimsPrincipal _user;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, IHttpContextAccessor httpContextAccessor, SignInManager<AppUser> signInManager, IImageHelper imageHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
+            _signInManager = signInManager;
+            _imageHelper = imageHelper;
+            _user = _httpContextAccessor.HttpContext.User;
         }
 
         public async Task<IdentityResult> CreateUserAsync(UserAddModelView userAddModelView)
@@ -106,5 +119,85 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
                 return result;
             }
         }
+
+        public async Task<UserProfileModelView> GetUserProfileAsync()
+        {
+            var userId = _user.GetLoggedInUserId();
+            var getUserWithImage = await _unitOfWork.GetRepository<AppUser>().GetAsync(x => x.Id == userId, x => x.Image);
+            var map = _mapper.Map<UserProfileModelView>(getUserWithImage);
+
+            map.Image.FileName = getUserWithImage.Image.FileName;
+
+            return map;
+        }
+
+        private async Task<Guid>UploadImageForUser(UserProfileModelView userProfileModelView)
+        {
+            var userEmail = _user.GetLoggedInEmail();
+            var imageUpload = await _imageHelper.Upload($"{userProfileModelView.FirstName} {userProfileModelView.LastName}", userProfileModelView.Photo, ImageType.User);
+            Image image = new(imageUpload.FullName, userProfileModelView.Photo.ContentType, userEmail);
+            await _unitOfWork.GetRepository<Image>().AddAsync(image);
+            
+            return image.Id;
+        }
+
+        public async Task<bool> UserProfileUpdateAsync(UserProfileModelView userProfileModelView)
+        {
+            var userId = _user.GetLoggedInUserId();
+
+            var user = await GetAppUserByIdAsync(userId);
+            var imageId = user.ImageId;
+
+            var isVerified = await _userManager.CheckPasswordAsync(user, userProfileModelView.CurrentPassword);
+
+            if (isVerified && userProfileModelView.NewPassword != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, userProfileModelView.CurrentPassword, userProfileModelView.NewPassword);
+                if (result.Succeeded)
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+
+                    await _signInManager.SignOutAsync();
+                    await _signInManager.PasswordSignInAsync(user, userProfileModelView.NewPassword, true, false);
+
+                    _mapper.Map(userProfileModelView, user);
+
+                    if (userProfileModelView.Photo != null)
+                        user.ImageId = await UploadImageForUser(userProfileModelView);
+                    else
+                        user.ImageId = imageId;
+
+                    await _userManager.UpdateAsync(user);
+                    await _unitOfWork.SaveAsync();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (isVerified)
+            {
+                await _userManager.UpdateSecurityStampAsync(user);
+
+                _mapper.Map(userProfileModelView, user);
+
+                if (userProfileModelView.Photo != null)
+                    user.ImageId = await UploadImageForUser(userProfileModelView);
+                else
+                    user.ImageId = imageId;
+
+                await _userManager.UpdateAsync(user);
+                await _unitOfWork.SaveAsync();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
+
 }   

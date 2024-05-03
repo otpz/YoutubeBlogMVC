@@ -18,5 +18,7 @@ namespace YoutubeBlogMVC.Service.Services.Abstraction
         Task<(IdentityResult identityResult, string? userEmail)> DeleteUserAsync(Guid userId);  
         Task<AppUser> GetAppUserByIdAsync(Guid userId);
         Task<string> GetUserRoleAsync(AppUser user);
+        Task<UserProfileModelView> GetUserProfileAsync();
+        Task<bool> UserProfileUpdateAsync(UserProfileModelView userProfileModelView);
     }
 }

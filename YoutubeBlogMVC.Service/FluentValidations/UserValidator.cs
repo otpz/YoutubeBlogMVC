@@ -32,7 +32,6 @@ namespace YoutubeBlogMVC.Service.FluentValidations
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
                 .MinimumLength(11)
-                .EmailAddress()
                 .WithName("Telefon No");
         }
     }
