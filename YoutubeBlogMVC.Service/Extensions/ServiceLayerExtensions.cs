@@ -18,6 +18,7 @@ namespace YoutubeBlogMVC.Service.Extensions
 
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUserService, UserService>();
             //Burada automapper'ın eklenmesi durumunda Profile'dan miras alan tüm class'ları dependency'e ekliyor. (dependency injection)
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

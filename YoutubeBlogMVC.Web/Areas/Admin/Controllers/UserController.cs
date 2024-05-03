@@ -14,6 +14,7 @@ using YoutubeBlogMVC.Entity.Enums;
 using YoutubeBlogMVC.Entity.ModelViews.Articles;
 using YoutubeBlogMVC.Entity.ModelViews.Users;
 using YoutubeBlogMVC.Service.Helpers.Images;
+using YoutubeBlogMVC.Service.Services.Abstraction;
 using YoutubeBlogMVC.Web.ResultMessages;
 
 namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
@@ -29,8 +30,9 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IImageHelper _imageHelper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
 
-        public UserController(UserManager<AppUser> userManager,RoleManager<AppRole> roleManager, IValidator<AppUser> validator, IMapper mapper, IToastNotification toastNotification, SignInManager<AppUser> signInManager, IImageHelper imageHelper, IUnitOfWork unitOfWork)
+        public UserController(IUserService userService, UserManager<AppUser> userManager,RoleManager<AppRole> roleManager, IValidator<AppUser> validator, IMapper mapper, IToastNotification toastNotification, SignInManager<AppUser> signInManager, IImageHelper imageHelper, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -40,27 +42,21 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             _signInManager = signInManager;
             _imageHelper = imageHelper;
             _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
+        [HttpGet]
         public async Task<IActionResult>  Index()
         {
-            var users = await _userManager.Users.ToListAsync();
-            var userModelViewMap = _mapper.Map<List<UserModelView>>(users);
+            var result = await _userService.GetAllUsersWithRoleAsync();
 
-            foreach (var user in userModelViewMap)
-            {
-                var findUser = await _userManager.FindByIdAsync(user.Id.ToString());
-                var role = await _userManager.GetRolesAsync(findUser);
-
-                user.Role = role[0];
-            }
-
-            return View(userModelViewMap);
+            return View(result);
         }
+
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var roles = await _roleManager.Roles.ToListAsync();
+            var roles = await _userService.GetAllRolesAsync();
             return View(new UserAddModelView { Roles = roles });
         }
 
@@ -69,16 +65,13 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         {
             var userMap = _mapper.Map<AppUser>(userAddModelView); // add mv'den user'a map'leme işlemi yapıldı.
             var validation = await _validator.ValidateAsync(userMap);
-            var roles = await _roleManager.Roles.ToListAsync();
+            var roles = await _userService.GetAllRolesAsync();
 
             if (ModelState.IsValid) 
             {
-                userMap.UserName = userAddModelView.Email;
-                var result = await _userManager.CreateAsync(userMap, string.IsNullOrEmpty(userAddModelView.Password) ? "" : userAddModelView.Password);
+                var result = await _userService.CreateUserAsync(userAddModelView);
                 if (result.Succeeded)
                 {
-                    var findRole = await _roleManager.FindByIdAsync(userAddModelView.RoleId.ToString());
-                    await _userManager.AddToRoleAsync(userMap, findRole.ToString());
                     _toastNotification.AddSuccessToastMessage(Messages.User.Add(userMap.FirstName), new ToastrOptions { Title = "Başarılı" });
                     return RedirectToAction("Index", "User", new { Area = "Admin" });
                 } else
@@ -98,8 +91,8 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            var roles = await _roleManager.Roles.ToListAsync();
+            var user = await _userService.GetAppUserByIdAsync(userId);
+            var roles = await _userService.GetAllRolesAsync();
 
             var userUpdateModelViewMap = _mapper.Map<UserUpdateModelView>(user);
             userUpdateModelViewMap.Roles = roles;
@@ -110,12 +103,12 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UserUpdateModelView userUpdateModelView)
         {
-            var user = await _userManager.FindByIdAsync(userUpdateModelView.Id.ToString());
+            var user = await _userService.GetAppUserByIdAsync(userUpdateModelView.Id);
 
             if (user != null)
             {
-                var userRole = string.Join("", await _userManager.GetRolesAsync(user));
-                var roles = await _roleManager.Roles.ToListAsync();
+                var roles = await _userService.GetAllRolesAsync();
+
                 if (ModelState.IsValid)
                 {
                     var map = _mapper.Map(userUpdateModelView, user); // update mv'dan user'a yeni gelen alanları aktardık.
@@ -125,13 +118,10 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
                     {
                         user.UserName = userUpdateModelView.Email;
                         user.SecurityStamp = Guid.NewGuid().ToString();
-                        var result = await _userManager.UpdateAsync(user);
+                        var result = await _userService.UpdateUserAsync(userUpdateModelView);
 
                         if (result.Succeeded)
                         {
-                            await _userManager.RemoveFromRoleAsync(user, userRole);
-                            var findRole = await _roleManager.FindByIdAsync(userUpdateModelView.RoleId.ToString());
-                            await _userManager.AddToRoleAsync(user, findRole.Name);
                             _toastNotification.AddSuccessToastMessage(Messages.User.Update(userUpdateModelView.Email), new ToastrOptions { Title = "Başarılı" });
                             return RedirectToAction("Index", "User", new { Area = "Admin" });
                         }
@@ -143,7 +133,6 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
                             }
                             validation.AddToModelState(this.ModelState);
                             return View(new UserUpdateModelView { Roles = roles });
-
                         }
                     }
                     else
@@ -160,17 +149,16 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete (Guid userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            var result = await _userManager.DeleteAsync(user);
+            var result = await _userService.DeleteUserAsync(userId);
 
-            if (result.Succeeded)
+            if (result.identityResult.Succeeded)
             {
-                _toastNotification.AddSuccessToastMessage(Messages.User.Delete(user.Email), new ToastrOptions { Title = "Başarılı" });
+                _toastNotification.AddSuccessToastMessage(Messages.User.Delete(result.userEmail), new ToastrOptions { Title = "Başarılı" });
                 return RedirectToAction("Index", "User", new { Area = "Admin" });
             }
             else
             {
-                foreach (var errors in result.Errors)
+                foreach (var errors in result.identityResult.Errors)
                 {
                     ModelState.AddModelError("", errors.Description);
                 }
