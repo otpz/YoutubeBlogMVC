@@ -14,6 +14,7 @@ namespace YoutubeBlogMVC.Service.Services.Abstraction
         Task<List<ArticleModelView>> GetAllArticlesWithCategoryDeletedAsync();
         Task<ArticleModelView> GetArticlesWithCategoryNonDeletedAsync(Guid articleId);
         Task<string> UpdateArticleAsync(ArticleUpdateModelView articleUpdateModelView);
+        Task<ArticleListModelView> GetAllByPagingAsync(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false);
         Task CreateArticleAsync(ArticleAddModelView articleAddModelView);
         Task<string> SafeDeleteArticleAsync(Guid articleId);
         Task<string> UndoDeleteArticleAsync(Guid articleId);

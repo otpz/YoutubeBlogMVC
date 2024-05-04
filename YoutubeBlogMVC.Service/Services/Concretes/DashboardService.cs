@@ -17,7 +17,6 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
         {
             _unitOfWork = unitOfWork;
         }
-
         public async Task<List<int>> GetYearlyArticleCounts()
         {
             var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(x => !x.IsDeleted);
@@ -37,5 +36,18 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
 
             return datas;
         }
+        public async Task<int> GetTotalArticleCount()
+        {
+            var articleCount = await _unitOfWork.GetRepository<Article>().CountAsync();
+
+            return articleCount;
+        }
+        public async Task<int> GetTotalCategoryCount()
+        {
+            var categoryCount = await _unitOfWork.GetRepository<Category>().CountAsync();
+
+            return categoryCount;
+        }
+
     }
 }

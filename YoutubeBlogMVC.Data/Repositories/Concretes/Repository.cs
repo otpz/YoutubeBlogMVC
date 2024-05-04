@@ -49,7 +49,10 @@ namespace YoutubeBlogMVC.Data.Repositories.Concretes
 
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
         {
-            return await Table.CountAsync(predicate);
+            if (predicate is not null)
+                return await Table.CountAsync(predicate);
+            else 
+                return await Table.CountAsync();
         }
 
         public async Task DeleteAsync(T entity)

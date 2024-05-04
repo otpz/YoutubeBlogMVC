@@ -34,5 +34,22 @@ namespace YoutubeBlogMVC.Web.Areas.Admin.Controllers
             return Json(JsonConvert.SerializeObject(count));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> TotalArticleCount()
+        {
+            var count = await _dashboardService.GetTotalArticleCount();
+
+            return Json(count);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TotalCategoryCount()
+        {
+            var count = await _dashboardService.GetTotalCategoryCount();
+
+            return Json(count);
+        }
+
+
     }
 }
