@@ -151,5 +151,31 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
 
             return article.Title;
         }
+
+        public async Task<ArticleListModelView> SearchAsync(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            pageSize = pageSize > 20 ? 20 : pageSize;
+
+            var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(
+                a => !a.IsDeleted &&
+                (a.Title.Contains(keyword) || a.Content.Contains(keyword) || a.Category.Name.Contains(keyword)), 
+                a => a.Category, 
+                i => i.Image, 
+                u => u.User
+                );
+                
+            var sortedArticles = isAscending
+                ? articles.OrderBy(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
+                : articles.OrderByDescending(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+            return new ArticleListModelView
+            {
+                Articles = sortedArticles,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                TotalCount = articles.Count,
+                IsAscending = isAscending
+            };
+        }
     }
 }

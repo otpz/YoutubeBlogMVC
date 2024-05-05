@@ -16,12 +16,21 @@ namespace YoutubeBlogMVC.Web.Controllers
             _articleService = articleService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false)
         {
             var article = await _articleService.GetAllByPagingAsync(categoryId, currentPage, pageSize, isAscending);
 
             return View(article);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            var article = await _articleService.SearchAsync(keyword, currentPage, pageSize, isAscending);
+            return View(article);
+        }
+
 
         public IActionResult Privacy()
         {
