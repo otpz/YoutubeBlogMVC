@@ -14,7 +14,7 @@
                                         <img src="~/images/@item.Image.FileName" style="max-width: 300px" alt="">
                                     </div>
                                     <div class="down-content">
-                                        <a href="post-details.html"><h4>@item.Title</h4></a>
+                                        <a asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id" ><h4>@item.Title</h4></a>
                                         <ul class="post-info">
                                             <li>@item.User.FirstName @item.User.LastName</li>
                                             <li>
@@ -39,7 +39,7 @@
                                                 <div class="col-6">
                                                     <ul class="post-share">
                                                         <li><i class="fa fa-link"></i></li>
-                                                        <li><a href="#">Devamını Oku</a></li>
+                                                        <li><a asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id">Devamını Oku</a></li>
                                                     </ul>
                                                 </div>
                                             </div>

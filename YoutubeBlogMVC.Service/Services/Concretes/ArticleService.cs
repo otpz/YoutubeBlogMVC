@@ -120,7 +120,7 @@ namespace YoutubeBlogMVC.Service.Services.Concretes
 
         public async Task<ArticleModelView> GetArticlesWithCategoryNonDeletedAsync(Guid articleId)
         {
-            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category, i=>i.Image);
+            var article = await _unitOfWork.GetRepository<Article>().GetAsync(x => x.IsDeleted == false && x.Id == articleId, x => x.Category, i=>i.Image, u=>u.User);
             var map = _mapper.Map<ArticleModelView>(article);
             return map;
         }
