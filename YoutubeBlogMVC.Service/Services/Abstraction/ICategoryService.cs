@@ -11,6 +11,7 @@ namespace YoutubeBlogMVC.Service.Services.Abstraction
     public interface ICategoryService
     {
         Task<List<CategoryModelView>> GetAllCategoriesNonDeleted();
+        Task<List<CategoryModelView>> GetAllCategoriesNonDeletedTake24();
         Task<List<CategoryModelView>> GetAllCategoriesDeleted();
         Task CreateCategoryAsync(CategoryAddModelView categoryAddModelView);
         Task<Category> GetCategoryByGuid(Guid categoryId);
