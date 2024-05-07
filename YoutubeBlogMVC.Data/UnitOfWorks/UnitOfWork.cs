@@ -4,9 +4,10 @@ using YoutubeBlogMVC.Data.Repositories.Concretes;
 
 namespace YoutubeBlogMVC.Data.UnitOfWorks
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _appDbContext;
+
         public UnitOfWork(AppDbContext dbContext)
         {
             _appDbContext = dbContext;

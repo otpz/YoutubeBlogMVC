@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YoutubeBlogMVC.Entity.Entities;
+﻿using YoutubeBlogMVC.Entity.Entities;
 
 namespace YoutubeBlogMVC.Entity.ModelViews.Articles
 {
